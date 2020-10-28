@@ -1,0 +1,26 @@
+PODS:
+  - Curve25519 (1.1)
+  - ESPProvision (2.0.6):
+    - ESPProvision/Core (= 2.0.6)
+  - ESPProvision/Core (2.0.6):
+    - Curve25519 (~> 1.1.0)
+    - SwiftProtobuf (~> 1.5.0)
+  - SwiftProtobuf (1.5.0)
+
+DEPENDENCIES:
+  - ESPProvision
+
+SPEC REPOS:
+  trunk:
+    - Curve25519
+    - ESPProvision
+    - SwiftProtobuf
+
+SPEC CHECKSUMS:
+  Curve25519: 5f595e906bd962248665978e2992a1fe96e2d831
+  ESPProvision: 9e3588685748c362b460713ebb123139bc0cd5b0
+  SwiftProtobuf: 241400280f912735c1e1b9fe675fdd2c6c4d42e2
+
+PODFILE CHECKSUM: edddf83e9882c718f9e8b1a36b8f5bdf82ea323f
+
+COCOAPODS: 1.10.0
