@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -14,6 +14,9 @@
 		F8EB74AB2549C2EA00B25E79 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F8EB74A92549C2EA00B25E79 /* Main.storyboard */; };
 		F8EB74AD2549C2EE00B25E79 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F8EB74AC2549C2EE00B25E79 /* Assets.xcassets */; };
 		F8EB74B02549C2EE00B25E79 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F8EB74AE2549C2EE00B25E79 /* LaunchScreen.storyboard */; };
+		F8EB74C02549CAE300B25E79 /* ConnectToDeviceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8EB74BF2549CAE300B25E79 /* ConnectToDeviceViewController.swift */; };
+		F8EB74C72549DDCC00B25E79 /* ProvisionDeviceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8EB74C62549DDCC00B25E79 /* ProvisionDeviceViewController.swift */; };
+		F8EB74CA2549EC2F00B25E79 /* VisibleNetworkTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8EB74C92549EC2F00B25E79 /* VisibleNetworkTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +31,9 @@
 		F8EB74AC2549C2EE00B25E79 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F8EB74AF2549C2EE00B25E79 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F8EB74B12549C2EE00B25E79 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F8EB74BF2549CAE300B25E79 /* ConnectToDeviceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectToDeviceViewController.swift; sourceTree = "<group>"; };
+		F8EB74C62549DDCC00B25E79 /* ProvisionDeviceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProvisionDeviceViewController.swift; sourceTree = "<group>"; };
+		F8EB74C92549EC2F00B25E79 /* VisibleNetworkTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisibleNetworkTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -48,7 +54,6 @@
 				8B38BA104D98C2FD6B13FFED /* Pods-Spot Check.debug.xcconfig */,
 				C9C683DD754D593053A656CB /* Pods-Spot Check.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -88,6 +93,9 @@
 				F8EB74AC2549C2EE00B25E79 /* Assets.xcassets */,
 				F8EB74AE2549C2EE00B25E79 /* LaunchScreen.storyboard */,
 				F8EB74B12549C2EE00B25E79 /* Info.plist */,
+				F8EB74BF2549CAE300B25E79 /* ConnectToDeviceViewController.swift */,
+				F8EB74C62549DDCC00B25E79 /* ProvisionDeviceViewController.swift */,
+				F8EB74C92549EC2F00B25E79 /* VisibleNetworkTableViewCell.swift */,
 			);
 			path = "Spot Check";
 			sourceTree = "<group>";
@@ -206,9 +214,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F8EB74C02549CAE300B25E79 /* ConnectToDeviceViewController.swift in Sources */,
 				F8EB74A82549C2EA00B25E79 /* ViewController.swift in Sources */,
+				F8EB74C72549DDCC00B25E79 /* ProvisionDeviceViewController.swift in Sources */,
 				F8EB74A42549C2EA00B25E79 /* AppDelegate.swift in Sources */,
 				F8EB74A62549C2EA00B25E79 /* SceneDelegate.swift in Sources */,
+				F8EB74CA2549EC2F00B25E79 /* VisibleNetworkTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -285,7 +296,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -340,7 +351,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -359,6 +370,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = P93EM6LJKE;
 				INFOPLIST_FILE = "Spot Check/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -379,6 +391,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = P93EM6LJKE;
 				INFOPLIST_FILE = "Spot Check/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
