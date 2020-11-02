@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		E75825D0B369BC8325603AAE /* Pods_Spot_Check.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C2E68A532FDE9AE962061DF /* Pods_Spot_Check.framework */; };
+		F8E37152255059CA00D44E6A /* ConfigureSpotCheckViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E37151255059CA00D44E6A /* ConfigureSpotCheckViewController.swift */; };
 		F8EB74A42549C2EA00B25E79 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8EB74A32549C2EA00B25E79 /* AppDelegate.swift */; };
 		F8EB74A62549C2EA00B25E79 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8EB74A52549C2EA00B25E79 /* SceneDelegate.swift */; };
 		F8EB74A82549C2EA00B25E79 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8EB74A72549C2EA00B25E79 /* ViewController.swift */; };
@@ -17,12 +18,14 @@
 		F8EB74C02549CAE300B25E79 /* ConnectToDeviceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8EB74BF2549CAE300B25E79 /* ConnectToDeviceViewController.swift */; };
 		F8EB74C72549DDCC00B25E79 /* ProvisionDeviceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8EB74C62549DDCC00B25E79 /* ProvisionDeviceViewController.swift */; };
 		F8EB74CA2549EC2F00B25E79 /* VisibleNetworkTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8EB74C92549EC2F00B25E79 /* VisibleNetworkTableViewCell.swift */; };
+		F8F4DC7B255088FF00CF1ED6 /* SpotCheckNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8F4DC762550857B00CF1ED6 /* SpotCheckNetwork.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		0C2E68A532FDE9AE962061DF /* Pods_Spot_Check.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Spot_Check.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B38BA104D98C2FD6B13FFED /* Pods-Spot Check.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Spot Check.debug.xcconfig"; path = "Target Support Files/Pods-Spot Check/Pods-Spot Check.debug.xcconfig"; sourceTree = "<group>"; };
 		C9C683DD754D593053A656CB /* Pods-Spot Check.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Spot Check.release.xcconfig"; path = "Target Support Files/Pods-Spot Check/Pods-Spot Check.release.xcconfig"; sourceTree = "<group>"; };
+		F8E37151255059CA00D44E6A /* ConfigureSpotCheckViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigureSpotCheckViewController.swift; sourceTree = "<group>"; };
 		F8EB74A02549C2EA00B25E79 /* Spot Check.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Spot Check.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F8EB74A32549C2EA00B25E79 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F8EB74A52549C2EA00B25E79 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -34,6 +37,7 @@
 		F8EB74BF2549CAE300B25E79 /* ConnectToDeviceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectToDeviceViewController.swift; sourceTree = "<group>"; };
 		F8EB74C62549DDCC00B25E79 /* ProvisionDeviceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProvisionDeviceViewController.swift; sourceTree = "<group>"; };
 		F8EB74C92549EC2F00B25E79 /* VisibleNetworkTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisibleNetworkTableViewCell.swift; sourceTree = "<group>"; };
+		F8F4DC762550857B00CF1ED6 /* SpotCheckNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotCheckNetwork.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +100,8 @@
 				F8EB74BF2549CAE300B25E79 /* ConnectToDeviceViewController.swift */,
 				F8EB74C62549DDCC00B25E79 /* ProvisionDeviceViewController.swift */,
 				F8EB74C92549EC2F00B25E79 /* VisibleNetworkTableViewCell.swift */,
+				F8E37151255059CA00D44E6A /* ConfigureSpotCheckViewController.swift */,
+				F8F4DC762550857B00CF1ED6 /* SpotCheckNetwork.swift */,
 			);
 			path = "Spot Check";
 			sourceTree = "<group>";
@@ -216,10 +222,12 @@
 			files = (
 				F8EB74C02549CAE300B25E79 /* ConnectToDeviceViewController.swift in Sources */,
 				F8EB74A82549C2EA00B25E79 /* ViewController.swift in Sources */,
+				F8E37152255059CA00D44E6A /* ConfigureSpotCheckViewController.swift in Sources */,
 				F8EB74C72549DDCC00B25E79 /* ProvisionDeviceViewController.swift in Sources */,
 				F8EB74A42549C2EA00B25E79 /* AppDelegate.swift in Sources */,
 				F8EB74A62549C2EA00B25E79 /* SceneDelegate.swift in Sources */,
 				F8EB74CA2549EC2F00B25E79 /* VisibleNetworkTableViewCell.swift in Sources */,
+				F8F4DC7B255088FF00CF1ED6 /* SpotCheckNetwork.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
