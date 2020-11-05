@@ -66,10 +66,10 @@ class ConfigureSpotCheckViewController : UIViewController, UITextFieldDelegate, 
     
     // MARK: - SetSpotDetailsDelegate impl
     
-    func setSpotDetails(newSpotDetails: SpotDetails) {
+    func setSpotDetails(newSpotDetails: SpotDetails?) {
         selectedSpotDetails = newSpotDetails
-        selectedSpotNameLabel.text = selectedSpotDetails!.name
-        selectedSpotNameLabel.textColor = UIColor.label
+        selectedSpotNameLabel.text = selectedSpotDetails?.name ?? "No spot selected"
+        selectedSpotNameLabel.textColor = selectedSpotDetails == nil ? UIColor.opaqueSeparator : UIColor.label
         configValuesChanged()
     }
     
@@ -118,8 +118,13 @@ class ConfigureSpotCheckViewController : UIViewController, UITextFieldDelegate, 
                     if let numDays = deserialized["number_of_days"] as? String {
                         self.numberOfDaysTextField.text = numDays
                     }
-                    if let spotName = deserialized["spot_name"] as? String {
-                        self.setSpotDetails(newSpotDetails: SpotDetails(name: spotName, uid: "fake"))
+                    let spotName = deserialized["spot_name"] as? String
+                    let spotUid = deserialized["spot_uid"] as? String
+                    if (spotName != nil && spotUid != nil) {
+                        self.setSpotDetails(newSpotDetails: SpotDetails(name: spotName!, uid: spotUid!))
+                    } else {
+                        print("Got invalid spot name or uid, setting selected details to nil (name: \(spotName ?? "nil") - uid: \(spotUid ?? "nil")")
+                        self.setSpotDetails(newSpotDetails: nil)
                     }
                     if let forecastTypes = deserialized["forecast_types"] as? [String] {
                         for type in forecastTypes {
@@ -151,6 +156,7 @@ class ConfigureSpotCheckViewController : UIViewController, UITextFieldDelegate, 
         let body: [String: Any] = [
             "number_of_days": numberOfDaysTextField.text!,
             "spot_name": selectedSpotDetails!.name,
+            "spot_uid": selectedSpotDetails!.uid,
             "forecast_types": buildForecastTypesArray()
         ]
 

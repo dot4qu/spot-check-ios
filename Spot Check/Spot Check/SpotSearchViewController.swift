@@ -113,7 +113,7 @@ class SpotSearchViewController : UITableViewController, UISearchResultsUpdating 
 }
 
 protocol SetSpotDetailsDelegate : AnyObject {
-    func setSpotDetails(newSpotDetails: SpotDetails)
+    func setSpotDetails(newSpotDetails: SpotDetails?)
 }
 
 class SpotDetails {
