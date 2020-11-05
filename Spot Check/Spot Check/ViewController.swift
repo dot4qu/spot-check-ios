@@ -29,26 +29,35 @@ class ViewController: UIViewController {
         spotCheckSettingsButton.isEnabled = false
         self.disabledPopupButton.isHidden = true
         
+        testDeviceInternetConnection()
+    }
+    
+    // MARK: - IBActions
+
+//    @IBAction func spotCheckSettingsButtonClicked(_ sender: Any) {
+//        let vc = storyboard?.instantiateViewController(withIdentifier: "configureSpotCheckVC") as! ConfigureSpotCheckViewController
+//        navigationController?.pushViewController(vc, animated: true)
+//    }
+    
+    @IBAction func disabledPopupButtonClicked(_ sender: Any) {
+        let action = UIAlertAction(title: "OK", style: .default, handler: nil)
+        let retry = UIAlertAction(title: "Retry", style: .default) { _ in self.testDeviceInternetConnection() }
+        let alertController = UIAlertController(title: "Device not found", message: "Could not find Spot Check device. You must configure the device's network connection using the top button before you can alter the Spot Check settings.", preferredStyle: .alert)
+        alertController.addAction(retry)
+        alertController.addAction(action)
+        self.present(alertController, animated: true, completion: nil)
+    }
+    
+    // MARK: - ViewController functions
+    private func testDeviceInternetConnection() {
+        httpRequest?.cancel()
         httpRequest = SpotCheckNetwork.sendHttpRequest(host: "spot-check.local.", path: "health", body: nil, method: "GET", contentType: "application/json") { data, error in
             DispatchQueue.main.async {
                 self.spotCheckSettingsButton.isEnabled = error == nil
                 self.disabledPopupButton.isHidden = error == nil
             }
         }
-    }
-    
-    // MARK: - IBActions
-
-    @IBAction func spotCheckSettingsButtonClicked(_ sender: Any) {
-        let vc = storyboard?.instantiateViewController(withIdentifier: "configureSpotCheckVC") as! ConfigureSpotCheckViewController
-        navigationController?.pushViewController(vc, animated: true)
-    }
-    
-    @IBAction func disabledPopupButtonClicked(_ sender: Any) {
-        let action = UIAlertAction(title: "OK", style: .default, handler: nil)
-        let alertController = UIAlertController(title: "Device not found", message: "Could not find Spot Check device. You must configure the device's network connection using the top button before you can alter the Spot Check settings.", preferredStyle: .alert)
-        alertController.addAction(action)
-        self.present(alertController, animated: true, completion: nil)
+        httpRequest?.resume()
     }
 }
 

@@ -39,6 +39,7 @@ class ProvisionDeviceViewController : UIViewController {
         device.scanWifiList { foundNetworks, _ in
             DispatchQueue.main.async {
                 self.visibleNetworksTableView.isHidden = false
+                self.scanNetworksButton.isHidden = true
                 // hide spinner
 //                self.headerView.isHidden = false
                 if let list = foundNetworks {
@@ -59,7 +60,12 @@ class ProvisionDeviceViewController : UIViewController {
                 var action: UIAlertAction
                 switch status {
                 case .success:
-                    action = UIAlertAction(title: "Continue", style: .default, handler: nil)
+                    let handler: ((UIAlertAction) -> Void)? = {_ in
+                        self.navigationController?.popToRootViewController(animated: true)
+                        let vc = self.storyboard?.instantiateViewController(identifier: "configureSpotCheckVC") as! ConfigureSpotCheckViewController
+                        self.navigationController?.pushViewController(vc, animated: true)
+                    }
+                    action = UIAlertAction(title: "Continue", style: .default, handler: handler)
                     alertController = UIAlertController(title: "Success", message: "Spot Check device successfully connected to the '\(ssid)' network!", preferredStyle: .alert)
                     break
                 case let .failure(error):

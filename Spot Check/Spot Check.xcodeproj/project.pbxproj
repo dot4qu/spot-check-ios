@@ -19,6 +19,8 @@
 		F8EB74C72549DDCC00B25E79 /* ProvisionDeviceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8EB74C62549DDCC00B25E79 /* ProvisionDeviceViewController.swift */; };
 		F8EB74CA2549EC2F00B25E79 /* VisibleNetworkTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8EB74C92549EC2F00B25E79 /* VisibleNetworkTableViewCell.swift */; };
 		F8F4DC7B255088FF00CF1ED6 /* SpotCheckNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8F4DC762550857B00CF1ED6 /* SpotCheckNetwork.swift */; };
+		F8F4DC832551AD7D00CF1ED6 /* SpotSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8F4DC822551AD7D00CF1ED6 /* SpotSearchViewController.swift */; };
+		F8F4DC862551B27800CF1ED6 /* SurflineSpotTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8F4DC852551B27800CF1ED6 /* SurflineSpotTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +40,8 @@
 		F8EB74C62549DDCC00B25E79 /* ProvisionDeviceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProvisionDeviceViewController.swift; sourceTree = "<group>"; };
 		F8EB74C92549EC2F00B25E79 /* VisibleNetworkTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisibleNetworkTableViewCell.swift; sourceTree = "<group>"; };
 		F8F4DC762550857B00CF1ED6 /* SpotCheckNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotCheckNetwork.swift; sourceTree = "<group>"; };
+		F8F4DC822551AD7D00CF1ED6 /* SpotSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotSearchViewController.swift; sourceTree = "<group>"; };
+		F8F4DC852551B27800CF1ED6 /* SurflineSpotTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurflineSpotTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +106,8 @@
 				F8EB74C92549EC2F00B25E79 /* VisibleNetworkTableViewCell.swift */,
 				F8E37151255059CA00D44E6A /* ConfigureSpotCheckViewController.swift */,
 				F8F4DC762550857B00CF1ED6 /* SpotCheckNetwork.swift */,
+				F8F4DC822551AD7D00CF1ED6 /* SpotSearchViewController.swift */,
+				F8F4DC852551B27800CF1ED6 /* SurflineSpotTableViewCell.swift */,
 			);
 			path = "Spot Check";
 			sourceTree = "<group>";
@@ -220,6 +226,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F8F4DC832551AD7D00CF1ED6 /* SpotSearchViewController.swift in Sources */,
+				F8F4DC862551B27800CF1ED6 /* SurflineSpotTableViewCell.swift in Sources */,
 				F8EB74C02549CAE300B25E79 /* ConnectToDeviceViewController.swift in Sources */,
 				F8EB74A82549C2EA00B25E79 /* ViewController.swift in Sources */,
 				F8E37152255059CA00D44E6A /* ConfigureSpotCheckViewController.swift in Sources */,

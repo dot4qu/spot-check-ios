@@ -8,8 +8,8 @@
 import Foundation
 
 public class SpotCheckNetwork {
-    public static func sendHttpRequest(host: String, path: String, body: Data?, method: String, contentType: String, completionHandler: @escaping (Data?, Error?) -> Swift.Void) -> URLSessionDataTask {
-        let url = URL(string: "http://\(host)/\(path)")!
+    private static func sendRequest(`protocol`: String, host: String, path: String, body: Data?, method: String, contentType: String, completionHandler: @escaping (Data?, Error?) -> Swift.Void) -> URLSessionDataTask {
+        let url = URL(string: "\(`protocol`)://\(host)/\(path)")!
         var request = URLRequest(url: url)
 
         request.setValue(contentType, forHTTPHeaderField: "Content-type")
@@ -34,5 +34,13 @@ public class SpotCheckNetwork {
         
         httpRequest.resume()
         return httpRequest
+    }
+    
+    public static func sendHttpRequest(host: String, path: String, body: Data?, method: String, contentType: String, completionHandler: @escaping (Data?, Error?) -> Swift.Void) -> URLSessionDataTask {
+        return sendRequest(protocol: "http", host: host, path: path, body: body, method: method, contentType: contentType, completionHandler: completionHandler)
+    }
+    
+    public static func sendHttpsRequest(host: String, path: String, body: Data?, method: String, contentType: String = "application/json", accept: String = "application/json", completionHandler: @escaping (Data?, Error?) -> Swift.Void) -> URLSessionDataTask {
+        return sendRequest(protocol: "https", host: host, path: path, body: body, method: method, contentType: contentType, completionHandler: completionHandler)
     }
 }

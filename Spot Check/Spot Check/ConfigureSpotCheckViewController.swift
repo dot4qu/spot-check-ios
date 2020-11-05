@@ -9,17 +9,17 @@ import Foundation
 import SystemConfiguration
 import UIKit
 
-class ConfigureSpotCheckViewController : UIViewController, UITextFieldDelegate {
+class ConfigureSpotCheckViewController : UIViewController, UITextFieldDelegate, SetSpotDetailsDelegate {
     var spotNameTextValid: Bool = false
-    var numberOfDaysTextValid: Bool = false
+    var spotDetailsValid: Bool = false
     var forecastTypesValid: Bool = false
     var httpRequest: URLSessionDataTask?
+    private var selectedSpotDetails: SpotDetails? = nil
 
     // MARK: - Overrides
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.spotNameTextField.delegate = self
         self.numberOfDaysTextField.delegate = self
 
         configValuesChanged()
@@ -32,7 +32,7 @@ class ConfigureSpotCheckViewController : UIViewController, UITextFieldDelegate {
     
     // MARK: - IBOutlets
 
-    @IBOutlet weak var spotNameTextField: UITextField!
+    @IBOutlet weak var selectedSpotNameLabel: UILabel!
     @IBOutlet weak var numberOfDaysTextField: UITextField!
     @IBOutlet weak var saveConfigButton: UIButton!
     @IBOutlet weak var swellForecastSwitch: UISwitch!
@@ -40,22 +40,23 @@ class ConfigureSpotCheckViewController : UIViewController, UITextFieldDelegate {
     
     // MARK: - IBActions
 
-    @IBAction func spotNameTextFieldChanged(_ sender: Any) {
-        spotNameTextValid = !(spotNameTextField.text?.isEmpty ?? false)
-        configValuesChanged()
-    }
+    @IBAction func editSpotButtonClicked(_ sender: Any) {
+        let vc = storyboard?.instantiateViewController(withIdentifier: "spotSearchVC") as! SpotSearchViewController
+        if (selectedSpotDetails != nil) {
+            vc.initialSearchText = selectedSpotDetails!.name
+        }
 
+        vc.delegate = self
+        navigationController?.present(vc, animated: true, completion: nil)
+    }
+    
     @IBAction func numberOfDaysTextFieldChanged(_ sender: Any) {
-        numberOfDaysTextValid = !(numberOfDaysTextField.text?.isEmpty ?? true)
         configValuesChanged()
     }
     
     @IBAction func forecastSwitchToggled(_ sender: Any) {
         // Lower keyboard in case we had either of these fields selected
-        spotNameTextField.resignFirstResponder()
         numberOfDaysTextField.resignFirstResponder()
-        
-        forecastTypesValid = swellForecastSwitch.isOn || tidesForecastSwitch.isOn
         configValuesChanged()
     }
 
@@ -63,20 +64,28 @@ class ConfigureSpotCheckViewController : UIViewController, UITextFieldDelegate {
         applyConfig()
     }
     
+    // MARK: - SetSpotDetailsDelegate impl
+    
+    func setSpotDetails(newSpotDetails: SpotDetails) {
+        selectedSpotDetails = newSpotDetails
+        selectedSpotNameLabel.text = selectedSpotDetails!.name
+        selectedSpotNameLabel.textColor = UIColor.label
+        configValuesChanged()
+    }
+    
     // MARK: - ViewController functions
     
     func textFieldShouldReturn(_ userText: UITextField) -> Bool {
-        if (userText == spotNameTextField) {
-            numberOfDaysTextField.becomeFirstResponder()
-        } else {
-            userText.resignFirstResponder()
-        }
-
+        userText.resignFirstResponder()
         return true;
     }
 
     private func configValuesChanged() {
-        saveConfigButton.isEnabled = spotNameTextValid && numberOfDaysTextValid && forecastTypesValid
+        spotDetailsValid = !(numberOfDaysTextField.text?.isEmpty ?? true)
+        forecastTypesValid = swellForecastSwitch.isOn || tidesForecastSwitch.isOn
+        spotNameTextValid = selectedSpotDetails != nil && !selectedSpotDetails!.name.isEmpty && !selectedSpotDetails!.uid.isEmpty
+
+        saveConfigButton.isEnabled = spotNameTextValid && spotDetailsValid && forecastTypesValid
     }
     
     private func getCurrentConfig() {
@@ -110,7 +119,7 @@ class ConfigureSpotCheckViewController : UIViewController, UITextFieldDelegate {
                         self.numberOfDaysTextField.text = numDays
                     }
                     if let spotName = deserialized["spot_name"] as? String {
-                        self.spotNameTextField.text = spotName
+                        self.setSpotDetails(newSpotDetails: SpotDetails(name: spotName, uid: "fake"))
                     }
                     if let forecastTypes = deserialized["forecast_types"] as? [String] {
                         for type in forecastTypes {
@@ -141,7 +150,7 @@ class ConfigureSpotCheckViewController : UIViewController, UITextFieldDelegate {
 
         let body: [String: Any] = [
             "number_of_days": numberOfDaysTextField.text!,
-            "spot_name": spotNameTextField.text!,
+            "spot_name": selectedSpotDetails!.name,
             "forecast_types": buildForecastTypesArray()
         ]
 
