@@ -61,9 +61,14 @@ class ProvisionDeviceViewController : UIViewController {
                 switch status {
                 case .success:
                     let handler: ((UIAlertAction) -> Void)? = {_ in
-                        self.navigationController?.popToRootViewController(animated: true)
+                        // Some weirdness here:
+                        //  - we save a local copy of the navigation vc because popToRootViewController nulls it out
+                        //  - we're using a manual pop and push onto nav VC b/c if an unwind segue is used, it performs
+                        //         the second segue (showing config) first, then clear is back to the main screen
+                        let navigationVC = self.navigationController
+                        navigationVC?.popToRootViewController(animated: false)
                         let vc = self.storyboard?.instantiateViewController(identifier: "configureSpotCheckVC") as! ConfigureSpotCheckViewController
-                        self.navigationController?.pushViewController(vc, animated: true)
+                        navigationVC?.pushViewController(vc, animated: true)
                     }
                     action = UIAlertAction(title: "Continue", style: .default, handler: handler)
                     alertController = UIAlertController(title: "Success", message: "Spot Check device successfully connected to the '\(ssid)' network!", preferredStyle: .alert)

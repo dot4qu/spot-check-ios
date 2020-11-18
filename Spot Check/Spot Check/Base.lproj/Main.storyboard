@@ -81,7 +81,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Spot Check settings"/>
                                 <connections>
-                                    <segue destination="tTa-bc-bp0" kind="show" id="PaM-oI-LdV"/>
+                                    <segue destination="tTa-bc-bp0" kind="show" identifier="launchConfigureSpotCheckVC" id="PaM-oI-LdV"/>
                                 </connections>
                             </button>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="R6O-Hw-x8g">
@@ -91,6 +91,14 @@
                                 <state key="normal" title="Why is this disabled?"/>
                                 <connections>
                                     <action selector="disabledPopupButtonClicked:" destination="DSk-X9-RbH" eventType="touchUpInside" id="hbF-ZE-xjf"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="McL-dV-C53">
+                                <rect key="frame" x="182" y="391" width="51" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="DEBUG"/>
+                                <connections>
+                                    <action selector="debugButtonClicked:" destination="DSk-X9-RbH" eventType="touchUpInside" id="6nD-Ku-fVA"/>
                                 </connections>
                             </button>
                         </subviews>

@@ -34,11 +34,6 @@ class ViewController: UIViewController {
     
     // MARK: - IBActions
 
-//    @IBAction func spotCheckSettingsButtonClicked(_ sender: Any) {
-//        let vc = storyboard?.instantiateViewController(withIdentifier: "configureSpotCheckVC") as! ConfigureSpotCheckViewController
-//        navigationController?.pushViewController(vc, animated: true)
-//    }
-    
     @IBAction func disabledPopupButtonClicked(_ sender: Any) {
         let action = UIAlertAction(title: "OK", style: .default, handler: nil)
         let retry = UIAlertAction(title: "Retry", style: .default) { _ in self.testDeviceInternetConnection() }

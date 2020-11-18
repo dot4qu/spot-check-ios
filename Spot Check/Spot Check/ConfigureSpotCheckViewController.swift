@@ -75,10 +75,10 @@ class ConfigureSpotCheckViewController : UIViewController, UITextFieldDelegate, 
     
     // MARK: - ViewController functions
     
-    func textFieldShouldReturn(_ userText: UITextField) -> Bool {
-        userText.resignFirstResponder()
-        return true;
-    }
+//    func textFieldShouldReturn(_ userText: UITextField) -> Bool {
+//        userText.resignFirstResponder()
+//        return true;
+//    }
 
     private func configValuesChanged() {
         spotDetailsValid = !(numberOfDaysTextField.text?.isEmpty ?? true)
@@ -103,7 +103,9 @@ class ConfigureSpotCheckViewController : UIViewController, UITextFieldDelegate, 
                 let action = UIAlertAction(title: "OK", style: .default, handler: nil)
                 let alertController = UIAlertController(title: "Error", message: "Could not retrieve current Spot Check configuration saved on device, functionality to save new configuration might be broken.", preferredStyle: .alert)
                 alertController.addAction(action)
-                self.present(alertController, animated: true, completion: nil)
+                DispatchQueue.main.async {
+                    self.present(alertController, animated: true, completion: nil)
+                }
                 return
             }
             

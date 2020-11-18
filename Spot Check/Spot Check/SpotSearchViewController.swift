@@ -19,8 +19,6 @@ class SpotSearchViewController : UITableViewController, UISearchResultsUpdating 
     
     // MARK: - IBOutlets
     
-    @IBOutlet weak var searchBar: UISearchBar!
-    
     // MARK: - Overrides
     
     override func viewDidLoad() {
@@ -32,7 +30,7 @@ class SpotSearchViewController : UITableViewController, UISearchResultsUpdating 
         searchController.searchBar.placeholder = "Start typing to search available locations..."
         searchController.searchBar.text = initialSearchText
         tableView.tableHeaderView = searchController.searchBar
-        
+
         definesPresentationContext = true
     }
     
@@ -54,10 +52,12 @@ class SpotSearchViewController : UITableViewController, UISearchResultsUpdating 
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
         let spotDetails = filteredSpotDetails[indexPath.row]
         delegate?.setSpotDetails(newSpotDetails: spotDetails)
 
+        // Without this, the first dismiss call dismisses the search controller (aka hides the keyboard)
+        // and a second tap would be required to fully dismiss search modal
+        searchController.isActive = false
         dismiss(animated: true, completion: nil)
     }
     
