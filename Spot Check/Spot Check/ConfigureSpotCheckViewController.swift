@@ -120,12 +120,16 @@ class ConfigureSpotCheckViewController : UIViewController, UITextFieldDelegate, 
                     if let numDays = deserialized["number_of_days"] as? String {
                         self.numberOfDaysTextField.text = numDays
                     }
+                    
                     let spotName = deserialized["spot_name"] as? String
                     let spotUid = deserialized["spot_uid"] as? String
-                    if (spotName != nil && spotUid != nil) {
-                        self.setSpotDetails(newSpotDetails: SpotDetails(name: spotName!, uid: spotUid!))
+                    let spotLat = deserialized["spot_lat"] as? String
+                    let spotLon = deserialized["spot_lon"] as? String
+                    if (spotName != nil && spotUid != nil && spotLat != nil && spotLon != nil) {
+                        let details = SpotDetails(name: spotName!, uid: spotUid!, lat: spotLat!, lon: spotLon!)
+                        self.setSpotDetails(newSpotDetails: details)
                     } else {
-                        print("Got invalid spot name or uid, setting selected details to nil (name: \(spotName ?? "nil") - uid: \(spotUid ?? "nil")")
+                        print("Got invalid spot name / uid / lat / lon, setting selected details to nil (name: \(spotName ?? "nil") - uid: \(spotUid ?? "nil") - \(spotLat ?? "nil") - \(spotLon ?? "nil"))")
                         self.setSpotDetails(newSpotDetails: nil)
                     }
                     if let forecastTypes = deserialized["forecast_types"] as? [String] {
@@ -159,6 +163,8 @@ class ConfigureSpotCheckViewController : UIViewController, UITextFieldDelegate, 
             "number_of_days": numberOfDaysTextField.text!,
             "spot_name": selectedSpotDetails!.name,
             "spot_uid": selectedSpotDetails!.uid,
+            "spot_lat": selectedSpotDetails!.lat,
+            "spot_lon": selectedSpotDetails!.lon,
             "forecast_types": buildForecastTypesArray()
         ]
 
@@ -182,7 +188,10 @@ class ConfigureSpotCheckViewController : UIViewController, UITextFieldDelegate, 
                 let action = UIAlertAction(title: "OK", style: .default, handler: nil)
                 let alertController = UIAlertController(title: "Error", message: "Could not find Spot Check device on network, are you sure it is turned on and connected?", preferredStyle: .alert)
                 alertController.addAction(action)
-                self.present(alertController, animated: true, completion: nil)
+                DispatchQueue.main.async {
+                    self.present(alertController, animated: true, completion: nil)
+                }
+
                 return
             }
             

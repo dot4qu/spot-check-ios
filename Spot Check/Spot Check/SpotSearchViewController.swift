@@ -96,8 +96,21 @@ class SpotSearchViewController : UITableViewController, UISearchResultsUpdating 
                             return
                         }
                         innerHitsList.forEach { x in
-                            let sourceObject = x["_source"] as! [String: Any]
-                            self.filteredSpotDetails.append(SpotDetails(name: sourceObject["name"] as! String, uid: x["_id"] as! String))
+                            guard let sourceObject = x["_source"] as? [String: Any],
+                                  let locationObject = sourceObject["location"] as? [String: Any],
+                                  let lat = locationObject["lat"] as? Double,
+                                  let lon = locationObject["lon"] as? Double else {
+                                return
+                            }
+                            
+                            let latStr = String(format: "%.10f", lat)
+                            let lonStr = String(format: "%.10f", lon)
+                            let details = SpotDetails(
+                                name: sourceObject["name"] as! String,
+                                uid: x["_id"] as! String,
+                                lat: latStr,
+                                lon: lonStr)
+                            self.filteredSpotDetails.append(details)
                         }
                     }
                 DispatchQueue.main.async {
@@ -120,8 +133,15 @@ class SpotDetails {
     let name: String
     let uid: String
     
-    init(name: String, uid: String) {
+    // lat/lon stored as strings so we can just parse them as strings on the esp rather than
+    // having to pull in floating point
+    let lat: String
+    let lon: String
+    
+    init(name: String, uid: String, lat: String, lon: String) {
         self.name = name
         self.uid = uid
+        self.lat = lat
+        self.lon = lon
     }
 }
