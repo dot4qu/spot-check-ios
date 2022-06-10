@@ -10,6 +10,7 @@ import UIKit
 import ESPProvision
 
 class ConnectToDeviceViewController : UIViewController, ESPDeviceConnectionDelegate {
+
     var httpRequest: URLSessionDataTask?
     
     // MARK: - Overrides
@@ -121,7 +122,7 @@ class ConnectToDeviceViewController : UIViewController, ESPDeviceConnectionDeleg
         navigationController?.pushViewController(vc, animated: true)
     }
     
-    func getProofOfPossesion(forDevice: ESPDevice) -> String? {
-        return ""
+    func getProofOfPossesion(forDevice: ESPDevice, completionHandler: @escaping (String) -> Void) {
+        completionHandler("")
     }
 }

@@ -27,7 +27,7 @@ ESPProvision is a provisioning library written in Swift. It provides mechanism t
 ## Requirements
 
 - iOS 11.0+ / macOS 10.12+
-- Xcode 11+
+- Xcode 13+
 - Swift 5.1+
 - Enable Hotspot Configuration capability in Xcode.
 - Enable Access WiFI Information capability in Xcode.
@@ -109,6 +109,16 @@ espDevice.connect(delegate: self) { status in
 ```
 > Delegate is required to get Proof of Possession from user, if device has pop capability.
 
+Return proof of possession for the device as shown below from delegate class :
+
+```swift
+
+func getProofOfPossesion(forDevice: ESPDevice, completionHandler: @escaping (String) -> Void) {
+    completionHandler(proofOfPossession)
+}
+
+```
+
 If status is connected then application can proceed to scan list of available networks visible to device. This list can be used to give option to the user to choose network of their own choice.
 
 ```swift
@@ -126,6 +136,14 @@ espDevice.provision(ssid: ssid, passPhrase: passphrase) { status in
 }
 
 ```
+
+## Permissions
+
+- Since iOS 13, apps that want to access SSID (Wi-Fi network name) are required to have the location permission. Add key `NSLocationWhenInUseUsageDescription` in Info.plist with proper description. This permission is required to verify iOS device is currently connected with the SoftAP. 
+
+- Since iOS 14, apps that communicate over local network are required to have the local network permission. Add key `NSLocalNetworkUsageDescription` in Info.plist with proper description. This permission is required to send/receive provisioning data with the SoftAP devices.
+
+
 
 ## License
 

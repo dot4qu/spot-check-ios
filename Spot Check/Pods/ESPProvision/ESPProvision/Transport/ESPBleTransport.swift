@@ -26,10 +26,18 @@ protocol ESPBLEStatusDelegate {
     
     /// Peripheral is connected successfully.
     func peripheralConnected()
-    /// Perpiheral disconnected.
-    func peripheralDisconnected()
+    
     /// Failed to connect with peripheral.
-    func peripheralFailedToConnect()
+    ///
+    /// - Parameter peripheral: CBPeripheral for which callback is recieved.
+    func peripheralFailedToConnect(peripheral: CBPeripheral?, error: Error?)
+
+    /// Peripheral device disconnected
+    ///
+    /// - Parameters:
+    ///   - peripheral: CBPeripheral for which callback is recieved.
+    ///   - error: Error description
+    func peripheralDisconnected(peripheral: CBPeripheral, error: Error?)
     
 }
 
@@ -40,31 +48,13 @@ protocol ESPBLETransportDelegate {
     /// one of the peripherals found here
     ///
     /// - Parameter peripherals: peripheral devices array
-    func peripheralsFound(peripherals: [String:CBPeripheral])
+    func peripheralsFound(peripherals: [String:ESPDevice])
 
     /// No peripherals found with matching Service UUID
     ///
     /// - Parameter serviceUUID: the service UUID provided at the time of creating the BLETransport object
     func peripheralsNotFound(serviceUUID: UUID?)
 
-    /// Peripheral device configured.
-    /// This tells the caller that the connected BLE device is now configured
-    /// and can be provisioned
-    ///
-    /// - Parameter peripheral: peripheral that has been connected to
-    func peripheralConfigured(peripheral: CBPeripheral)
-
-    /// Peripheral device could not be configured.
-    /// This tells the called that the connected device cannot be configured for provisioning
-    /// - Parameter peripheral: peripheral that has been connected to
-    func peripheralNotConfigured(peripheral: CBPeripheral)
-
-    /// Peripheral device disconnected
-    ///
-    /// - Parameters:
-    ///   - peripheral: peripheral device
-    ///   - error: error
-    func peripheralDisconnected(peripheral: CBPeripheral, error: Error?)
 }
 
 /// The `ESPBleTransport` class conforms and implememnt methods of `ESPCommunicable` protocol.
@@ -74,7 +64,6 @@ class ESPBleTransport: NSObject, ESPCommunicable {
     /// Instance of 'ESPUtility' class.
     var utility: ESPUtility
 
-    private var transportToken = DispatchSemaphore(value: 1)
     private var isBLEEnabled = false
     private var scanTimeout = 5.0
     private var readCounter = 0
@@ -85,10 +74,11 @@ class ESPBleTransport: NSObject, ESPCommunicable {
 
     
     var centralManager: CBCentralManager!
-    var espressifPeripherals: [String:CBPeripheral] = [:]
+    var espressifPeripherals: [String:ESPDevice] = [:]
     var currentPeripheral: CBPeripheral?
     var currentService: CBService?
     var bleConnectTimer = Timer()
+    var bleScanTimer: Timer?
     var bleDeviceConnected = false
 
     var peripheralCanRead: Bool = true
@@ -118,17 +108,16 @@ class ESPBleTransport: NSObject, ESPCommunicable {
     ///
     /// - Parameters:
     ///   - data: Data to be sent.
+    ///   - sessionPath: Not required.
     ///   - completionHandler: Handler called when data is sent.
-    func SendSessionData(data: Data,
-                         completionHandler: @escaping (Data?, Error?) -> Void) {
+    func SendSessionData(data: Data, sessionPath: String?, completionHandler: @escaping (Data?, Error?) -> Void) {
         ESPLog.log("Sending session data.")
         guard peripheralCanWrite, peripheralCanRead,
             let espressifPeripheral = currentPeripheral else {
             completionHandler(nil, ESPTransportError.deviceUnreachableError("BLE device unreachable"))
             return
         }
-
-        transportToken.wait()
+        
         espressifPeripheral.writeValue(data, for: utility.sessionCharacteristic, type: .withResponse)
         currentRequestCompletionHandler = completionHandler
     }
@@ -148,13 +137,12 @@ class ESPBleTransport: NSObject, ESPCommunicable {
             completionHandler(nil, ESPTransportError.deviceUnreachableError("BLE device unreachable"))
             return
         }
-
-        transportToken.wait()
+        
         if let characteristic = utility.configUUIDMap[path] {
             espressifPeripheral.writeValue(data, for: characteristic, type: .withResponse)
             currentRequestCompletionHandler = completionHandler
         } else {
-            transportToken.signal()
+            completionHandler(nil,NSError(domain: "com.espressif.ble", code: 1, userInfo: [NSLocalizedDescriptionKey:"BLE characteristic does not exist."]))
         }
     }
 
@@ -185,7 +173,7 @@ class ESPBleTransport: NSObject, ESPCommunicable {
             ESPLog.log("Peripheral connection timeout occured.")
             self.disconnect()
             bleConnectTimer.invalidate()
-            bleStatusDelegate?.peripheralFailedToConnect()
+            bleStatusDelegate?.peripheralFailedToConnect(peripheral: nil, error: NSError(domain: "com.espressif.ble", code: 2, userInfo: [NSLocalizedDescriptionKey:"Connection timeout. Unable to read BLE characteristic on time."]))
         }
     }
 
@@ -207,7 +195,8 @@ class ESPBleTransport: NSObject, ESPCommunicable {
         self.delegate = delegate
 
         if isBLEEnabled {
-            _ = Timer.scheduledTimer(timeInterval: scanTimeout,
+            bleScanTimer?.invalidate()
+            bleScanTimer = Timer.scheduledTimer(timeInterval: scanTimeout,
                                      target: self,
                                      selector: #selector(stopScan(timer:)),
                                      userInfo: nil,
@@ -229,6 +218,15 @@ class ESPBleTransport: NSObject, ESPCommunicable {
         } else {
             delegate?.peripheralsNotFound(serviceUUID: UUID(uuidString: ""))
         }
+    }
+    
+    // Stop scan and invalidate timer
+    func stopSearch() {
+        ESPLog.log("Ble search stopped.")
+        centralManager.stopScan()
+        bleScanTimer?.invalidate()
+        espressifPeripherals.removeAll()
+        delegate?.peripheralsNotFound(serviceUUID: UUID(uuidString: ""))
     }
 
     /// BLE implementation of `ESPCommunicable` protocol.
@@ -252,14 +250,11 @@ extension ESPBleTransport: CBCentralManagerDelegate {
         case .unauthorized:
             ESPLog.log("Bluetooth state unauthorized")
         case .poweredOff:
-            if let currentPeripheral = currentPeripheral {
-                delegate?.peripheralDisconnected(peripheral: currentPeripheral, error: nil)
-            }
             ESPLog.log("Bluetooth state off")
         case .poweredOn:
             ESPLog.log("Bluetooth state on")
             isBLEEnabled = true
-            _ = Timer.scheduledTimer(timeInterval: scanTimeout,
+            bleScanTimer = Timer.scheduledTimer(timeInterval: scanTimeout,
                                      target: self,
                                      selector: #selector(stopScan(timer:)),
                                      userInfo: nil,
@@ -276,7 +271,9 @@ extension ESPBleTransport: CBCentralManagerDelegate {
         ESPLog.log("Peripheral devices discovered.\(data.debugDescription)")
         if let peripheralName = data["kCBAdvDataLocalName"] as? String ?? peripheral.name  {
             if peripheralName.lowercased().hasPrefix(deviceNamePrefix.lowercased()) {
-                espressifPeripherals[peripheralName] = peripheral
+                let newEspDevice  = ESPDevice(name: peripheralName, security: .secure, transport: .ble, advertisementData: data)
+                espressifPeripherals[peripheralName] = newEspDevice
+                newEspDevice.peripheral = peripheral
             }
         }
     }
@@ -288,12 +285,12 @@ extension ESPBleTransport: CBCentralManagerDelegate {
 
     func centralManager(_: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
         ESPLog.log("Fail to connect to peripheral.")
-        delegate?.peripheralDisconnected(peripheral: peripheral, error: error)
+        bleStatusDelegate?.peripheralFailedToConnect(peripheral: peripheral, error: error)
     }
 
     func centralManager(_: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         ESPLog.log("Disconnected with peripheral")
-        delegate?.peripheralDisconnected(peripheral: peripheral, error: error)
+        bleStatusDelegate?.peripheralDisconnected(peripheral: peripheral, error: error)
     }
 }
 
@@ -352,7 +349,6 @@ extension ESPBleTransport: CBPeripheralDelegate {
             }
             self.currentRequestCompletionHandler = nil
         }
-        transportToken.signal()
     }
 
     func peripheral(_: CBPeripheral, didDiscoverDescriptorsFor characteristic: CBCharacteristic, error _: Error?) {

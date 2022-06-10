@@ -93,6 +93,13 @@ public class ESPProvisionManager: NSObject, AVCaptureMetadataOutputObjectsDelega
         
     }
     
+    /// Stops searching for Bluetooth devices. Not applicable for SoftAP device type.
+    /// Any intermediate search result will be ignored. Delegate for peripheralsNotFound is called.
+    public func stopESPDevicesSearch() {
+        ESPLog.log("Stop ESPDevices search called.")
+        espBleTransport.stopSearch()
+    }
+    
     /// Scan for `ESPDevice` using QR code.
     ///
     /// - Parameters:
@@ -203,7 +210,25 @@ public class ESPProvisionManager: NSObject, AVCaptureMetadataOutputObjectsDelega
                 return
             }
 
-            self.previewLayer = AVCaptureVideoPreviewLayer(session: self.captureSession)
+            let aPreviewLayer = AVCaptureVideoPreviewLayer(session: self.captureSession)
+            
+            if aPreviewLayer.connection?.isVideoOrientationSupported ?? false {
+                
+                var interfaceOrientation:UIInterfaceOrientation = .portrait
+                var videoOrientation:AVCaptureVideoOrientation  = .portrait
+                
+                if #available(iOS 13.0, *) {
+                    interfaceOrientation = UIApplication.shared.windows.first?.windowScene?.interfaceOrientation ?? .portrait
+                    
+                } else {
+                    interfaceOrientation = UIApplication.shared.statusBarOrientation
+                }
+                
+                videoOrientation = interfaceOrientation.videoOrientation ?? videoOrientation
+                aPreviewLayer.connection?.videoOrientation = videoOrientation
+            }
+            
+            self.previewLayer = aPreviewLayer
             self.previewLayer?.frame = scanView.layer.bounds
             self.previewLayer?.videoGravity = .resizeAspectFill
             scanView.layer.addSublayer(self.previewLayer!)
@@ -219,7 +244,7 @@ public class ESPProvisionManager: NSObject, AVCaptureMetadataOutputObjectsDelega
             guard let stringValue = readableObject.stringValue else { return }
             captureSession.stopRunning()
             parseQrCode(code: stringValue)
-            ESPLog.log("Recieved QR code response.")
+            ESPLog.log("Received QR code response.")
         }
     }
     
@@ -236,19 +261,21 @@ public class ESPProvisionManager: NSObject, AVCaptureMetadataOutputObjectsDelega
                     let transport:ESPTransport = transportInfo.lowercased() == "softap" ? .softap:.ble
                     let security:ESPSecurity = jsonArray["security"] ?? "1" == "0" ? .unsecure:.secure
                     let pop = jsonArray["pop"] ?? ""
-                    switch transport {
-                    case .ble:
-                        createESPDevice(deviceName: deviceName, transport: transport, security: security, proofOfPossession: pop, completionHandler: self.scanCompletionHandler!)
-                    default:
-                        createESPDevice(deviceName: deviceName, transport: transport, security: security, proofOfPossession: pop, softAPPassword: jsonArray["password"] ?? "", completionHandler: self.scanCompletionHandler!)
-                        
+                    if let scanCompletionHandler = scanCompletionHandler {
+                        switch transport {
+                        case .ble:
+                            createESPDevice(deviceName: deviceName, transport: transport, security: security, proofOfPossession: pop, completionHandler: scanCompletionHandler)
+                        default:
+                            createESPDevice(deviceName: deviceName, transport: transport, security: security, proofOfPossession: pop, softAPPassword: jsonArray["password"] ?? "", completionHandler: scanCompletionHandler)
+                            
+                        }
                     }
                     return
                 }
             }
         }
         ESPLog.log("Invalid QR code.")
-        scanCompletionHandler?(nil,.invalidQRCode)
+        scanCompletionHandler?(nil,.invalidQRCode(code))
     }
         
     /// Manually create `ESPDevice` object.
@@ -286,16 +313,17 @@ public class ESPProvisionManager: NSObject, AVCaptureMetadataOutputObjectsDelega
 }
 
 extension ESPProvisionManager: ESPBLETransportDelegate {
-    func peripheralsFound(peripherals: [String:CBPeripheral]) {
+    
+    func peripheralsFound(peripherals: [String:ESPDevice]) {
         
         ESPLog.log("Ble devices found :\(peripherals)")
         
         espDevices.removeAll()
-        for key in peripherals.keys {
-           let newESPDevice = ESPDevice(name: key, security: self.security, transport: .ble, proofOfPossession: espBleTransport.proofOfPossession)
-            newESPDevice.peripheral = peripherals[key]
-            newESPDevice.espBleTransport = espBleTransport
-            espDevices.append(newESPDevice)
+        for device in peripherals.values {
+            device.security = self.security
+            device.proofOfPossession  = espBleTransport.proofOfPossession
+            device.espBleTransport = espBleTransport
+            espDevices.append(device)
         }
         self.searchCompletionHandler?(espDevices,nil)
         self.scanCompletionHandler?(espDevices.first,nil)
@@ -308,12 +336,16 @@ extension ESPProvisionManager: ESPBLETransportDelegate {
         self.searchCompletionHandler?(nil,.espDeviceNotFound)
         self.scanCompletionHandler?(nil,.espDeviceNotFound)
     }
+}
 
-    func peripheralConfigured(peripheral _: CBPeripheral) {}
-
-    func peripheralNotConfigured(peripheral _: CBPeripheral) {}
-
-    func peripheralDisconnected(peripheral: CBPeripheral, error _: Error?) {}
-
-    func bluetoothUnavailable() {}
+extension UIInterfaceOrientation {
+    var videoOrientation: AVCaptureVideoOrientation? {
+        switch self {
+        case .portraitUpsideDown: return .portraitUpsideDown
+        case .landscapeRight: return .landscapeRight
+        case .landscapeLeft: return .landscapeLeft
+        case .portrait: return .portrait
+        default: return nil
+        }
+    }
 }
