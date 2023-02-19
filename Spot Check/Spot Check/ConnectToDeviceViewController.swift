@@ -8,16 +8,22 @@
 import Foundation
 import UIKit
 import ESPProvision
+import CoreLocation
 
 class ConnectToDeviceViewController : UIViewController, ESPDeviceConnectionDelegate {
 
     var httpRequest: URLSessionDataTask?
+    let locationManager = CLLocationManager()
     
     // MARK: - Overrides
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         NotificationCenter.default.addObserver(self, selector: #selector(appEnteredForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(appEnteredBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
+    }
+    
+    override func viewDidLoad() {
+        getLocationPermission()
     }
     
     // MARK: - IBOutlets
@@ -55,6 +61,24 @@ class ConnectToDeviceViewController : UIViewController, ESPDeviceConnectionDeleg
     
     // MARK: - ViewController functions
     
+    func getLocationPermission()  {
+            let locStatus = CLLocationManager.authorizationStatus()
+            switch locStatus {
+               case .notDetermined:
+                  locationManager.requestWhenInUseAuthorization()
+               return
+               case .denied, .restricted:
+                  let alert = UIAlertController(title: "Location Services are disabled", message: "Please enable Location Services in your Settings", preferredStyle: .alert)
+                  let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+                  alert.addAction(okAction)
+                  present(alert, animated: true, completion: nil)
+               case .authorizedAlways, .authorizedWhenInUse:
+               break
+            @unknown default:
+                print("unknown")
+            }
+        }
+    
     func getDeviceVersionInfo() {
         httpRequest = SpotCheckNetwork.sendHttpRequest(host: "192.168.4.1", path: "proto-ver", body: Data("ESP".utf8), method: "POST", contentType: "application/x-www-form-urlencoded") { response, error in
             DispatchQueue.main.async {
@@ -77,7 +101,7 @@ class ConnectToDeviceViewController : UIViewController, ESPDeviceConnectionDeleg
     
     private func createESPDevice() {
         let ssid = "Spot Check configuration"
-        ESPProvisionManager.shared.createESPDevice(deviceName: ssid, transport: .softap, security: .unsecure, proofOfPossession: "", completionHandler: { device, _ in
+        ESPProvisionManager.shared.createESPDevice(deviceName: ssid, transport: .softap, security: .unsecure, completionHandler: { device, _ in
             if device != nil {
                 self.connectToESPDevice(device: device!)
             } else {
@@ -98,10 +122,11 @@ class ConnectToDeviceViewController : UIViewController, ESPDeviceConnectionDeleg
                     self.present(alertController, animated: true, completion: nil)
                     break
                 case let .failedToConnect(error):
-                    let action = UIAlertAction(title: "OK", style: .default, handler: nil)
-                    let alertController = UIAlertController(title: "Connection failed", message: "Could not find Spot Check device (\(error)). Are you sure you're connected to the 'Spot Check configuration' natwork and the device is plugged in?", preferredStyle: .alert)
-                    alertController.addAction(action)
-                    self.present(alertController, animated: true, completion: nil)
+                    self.launchSettingsButton.isEnabled = true
+//                    let action = UIAlertAction(title: "OK", style: .default, handler: nil)
+//                    let alertController = UIAlertController(title: "Connection failed", message: "Could not find Spot Check device (\(error)). Are you sure you're connected to the 'Spot Check configuration' network and the device is plugged in?", preferredStyle: .alert)
+//                    alertController.addAction(action)
+//                    self.present(alertController, animated: true, completion: nil)
                     break
                 default:
                     let action = UIAlertAction(title: "OK", style: .default, handler: nil)

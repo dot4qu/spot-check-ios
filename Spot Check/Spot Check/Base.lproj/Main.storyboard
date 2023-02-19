@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="rUm-g7-dw4">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21225" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="rUm-g7-dw4">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21207"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -98,7 +98,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="DEBUG"/>
                                 <connections>
-                                    <action selector="debugButtonClicked:" destination="DSk-X9-RbH" eventType="touchUpInside" id="6nD-Ku-fVA"/>
+                                    <segue destination="tTa-bc-bp0" kind="show" id="Qxb-o7-cmg"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -120,7 +120,7 @@
             <objects>
                 <navigationController id="rUm-g7-dw4" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="S4R-Ue-QdB">
-                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <rect key="frame" x="0.0" y="48" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -152,7 +152,7 @@
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="visibleNetworkCell" id="UyE-aq-F42" customClass="VisibleNetworkTableViewCell" customModule="Spot_Check" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="24.5" width="414" height="43.5"/>
+                                        <rect key="frame" x="0.0" y="50" width="414" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="UyE-aq-F42" id="MLt-zR-3IC">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
@@ -236,16 +236,14 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Spot location:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qXk-gY-5UO">
-                                <rect key="frame" x="62" y="240" width="283" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Spot location:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qXk-gY-5UO">
+                                <rect key="frame" x="62" y="240" width="105" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Number of days in forecast:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pbB-o2-hIL">
-                                <rect key="frame" x="62" y="327" width="291" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Manual time update:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PmV-CD-IXn">
+                                <rect key="frame" x="62" y="356.5" width="155" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -258,51 +256,6 @@
                                     <action selector="saveConfigClicked:" destination="tTa-bc-bp0" eventType="touchUpInside" id="e88-SP-L9O"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Forecast categories:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FDU-0D-qYL">
-                                <rect key="frame" x="62" y="419" width="291" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="6q9-cu-9ch">
-                                <rect key="frame" x="306" y="487" width="49" height="31"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <connections>
-                                    <action selector="forecastSwitchToggled:" destination="tTa-bc-bp0" eventType="valueChanged" id="X2o-6t-hBg"/>
-                                </connections>
-                            </switch>
-                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="ABo-oa-xAj">
-                                <rect key="frame" x="306" y="448" width="49" height="31"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <connections>
-                                    <action selector="forecastSwitchToggled:" destination="tTa-bc-bp0" eventType="valueChanged" id="jUe-l5-UIG"/>
-                                </connections>
-                            </switch>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Tides" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="93b-0T-EBq">
-                                <rect key="frame" x="62" y="492" width="236" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="BNU-RC-Mht">
-                                <rect key="frame" x="62" y="356" width="291" height="34"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
-                                <connections>
-                                    <action selector="numberOfDaysTextFieldChanged:" destination="tTa-bc-bp0" eventType="editingChanged" id="gsx-Et-Xw9"/>
-                                    <outlet property="delegate" destination="tTa-bc-bp0" id="onU-UU-1et"/>
-                                </connections>
-                            </textField>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Swell" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DXf-JV-pcl">
-                                <rect key="frame" x="64" y="453" width="234" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ba2-ws-ss7">
                                 <rect key="frame" x="323" y="235" width="30" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -311,24 +264,49 @@
                                     <action selector="editSpotButtonClicked:" destination="tTa-bc-bp0" eventType="touchUpInside" id="bx5-4v-h9A"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="No spot selected" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PeL-vR-Ete">
-                                <rect key="frame" x="62" y="269" width="291" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No spot selected" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PeL-vR-Ete">
+                                <rect key="frame" x="142.5" y="269" width="129.5" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" systemColor="opaqueSeparatorColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <datePicker contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="time" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="5tH-Ai-HX3">
+                                <rect key="frame" x="125" y="386" width="164" height="45"/>
+                                <connections>
+                                    <action selector="manualTimeDatePickerChanged:" destination="tTa-bc-bp0" eventType="valueChanged" id="dG0-Zb-Wuc"/>
+                                </connections>
+                            </datePicker>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2Cl-B6-H1e">
+                                <rect key="frame" x="175" y="446" width="68" height="35"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Apply"/>
+                                <connections>
+                                    <action selector="saveManualTimeClicked:" destination="tTa-bc-bp0" eventType="touchUpInside" id="mHY-Bd-5Fl"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Jy9-9r-qge"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="qXk-gY-5UO" firstAttribute="top" secondItem="Jy9-9r-qge" secondAttribute="top" constant="148" id="3be-Eb-fTY"/>
+                            <constraint firstItem="PmV-CD-IXn" firstAttribute="top" secondItem="PeL-vR-Ete" secondAttribute="bottom" constant="66.5" id="BtB-Su-BfK"/>
+                            <constraint firstItem="qXk-gY-5UO" firstAttribute="leading" secondItem="Jy9-9r-qge" secondAttribute="leading" constant="62" id="EIS-JK-FIG"/>
+                            <constraint firstItem="PeL-vR-Ete" firstAttribute="centerX" secondItem="Jy9-9r-qge" secondAttribute="centerX" id="N3h-fC-6WT"/>
+                            <constraint firstItem="5tH-Ai-HX3" firstAttribute="leading" secondItem="Jy9-9r-qge" secondAttribute="leading" constant="125" id="ODG-yQ-6lf"/>
+                            <constraint firstItem="5tH-Ai-HX3" firstAttribute="firstBaseline" secondItem="PmV-CD-IXn" secondAttribute="baseline" constant="12.5" symbolType="layoutAnchor" id="Wsn-Sg-FPn"/>
+                            <constraint firstItem="Jy9-9r-qge" firstAttribute="trailing" secondItem="5tH-Ai-HX3" secondAttribute="trailing" constant="125" id="YJc-68-VNv"/>
+                            <constraint firstItem="PmV-CD-IXn" firstAttribute="leading" secondItem="Jy9-9r-qge" secondAttribute="leading" constant="62" id="ccW-nf-bhB"/>
+                            <constraint firstItem="PeL-vR-Ete" firstAttribute="top" secondItem="qXk-gY-5UO" secondAttribute="bottom" constant="8" symbolic="YES" id="d5g-PQ-U8B"/>
+                            <constraint firstItem="5tH-Ai-HX3" firstAttribute="centerY" secondItem="oFn-KI-7oU" secondAttribute="centerY" id="dOs-fh-cds"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="pEb-SC-7Et"/>
                     <connections>
-                        <outlet property="numberOfDaysTextField" destination="BNU-RC-Mht" id="hkM-mK-FZD"/>
+                        <outlet property="manualTimeDatePicker" destination="5tH-Ai-HX3" id="DFW-jx-WqY"/>
                         <outlet property="saveConfigButton" destination="Mu2-Te-jpB" id="rMP-a7-1Pb"/>
+                        <outlet property="saveManualTimeButton" destination="2Cl-B6-H1e" id="lTP-FJ-atq"/>
                         <outlet property="selectedSpotNameLabel" destination="PeL-vR-Ete" id="TW9-6b-kd1"/>
-                        <outlet property="swellForecastSwitch" destination="ABo-oa-xAj" id="M7T-gH-vaj"/>
-                        <outlet property="tidesForecastSwitch" destination="6q9-cu-9ch" id="l7r-gP-kYL"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lBg-kJ-sbU" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -345,7 +323,7 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="surflineSpotCell" id="iWw-Yb-iVi" customClass="SurflineSpotTableViewCell" customModule="Spot_Check" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="24.5" width="414" height="43.5"/>
+                                <rect key="frame" x="0.0" y="50" width="414" height="43.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="iWw-Yb-iVi" id="K25-t8-6Fm">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
@@ -377,6 +355,9 @@
             <point key="canvasLocation" x="1595.6521739130435" y="170.75892857142856"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="PaM-oI-LdV"/>
+    </inferredMetricsTieBreakers>
     <resources>
         <systemColor name="opaqueSeparatorColor">
             <color red="0.77647058823529413" green="0.77647058823529413" blue="0.78431372549019607" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

@@ -12,15 +12,15 @@ import UIKit
 class ConfigureSpotCheckViewController : UIViewController, UITextFieldDelegate, SetSpotDetailsDelegate {
     var spotNameTextValid: Bool = false
     var spotDetailsValid: Bool = false
-    var forecastTypesValid: Bool = false
     var httpRequest: URLSessionDataTask?
     private var selectedSpotDetails: SpotDetails? = nil
+    private var manualTimeEpochSecs: UInt32 = 0
 
     // MARK: - Overrides
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.numberOfDaysTextField.delegate = self
+        manualTimeDatePicker.timeZone = TimeZone.init(identifier: "UTC")
 
         configValuesChanged()
         getCurrentConfig()
@@ -33,10 +33,9 @@ class ConfigureSpotCheckViewController : UIViewController, UITextFieldDelegate, 
     // MARK: - IBOutlets
 
     @IBOutlet weak var selectedSpotNameLabel: UILabel!
-    @IBOutlet weak var numberOfDaysTextField: UITextField!
     @IBOutlet weak var saveConfigButton: UIButton!
-    @IBOutlet weak var swellForecastSwitch: UISwitch!
-    @IBOutlet weak var tidesForecastSwitch: UISwitch!
+    @IBOutlet weak var saveManualTimeButton: UIButton!
+    @IBOutlet weak var manualTimeDatePicker: UIDatePicker!
     
     // MARK: - IBActions
 
@@ -50,18 +49,16 @@ class ConfigureSpotCheckViewController : UIViewController, UITextFieldDelegate, 
         navigationController?.present(vc, animated: true, completion: nil)
     }
     
-    @IBAction func numberOfDaysTextFieldChanged(_ sender: Any) {
+    @IBAction func manualTimeDatePickerChanged(_ sender: Any) {
         configValuesChanged()
     }
     
-    @IBAction func forecastSwitchToggled(_ sender: Any) {
-        // Lower keyboard in case we had either of these fields selected
-        numberOfDaysTextField.resignFirstResponder()
-        configValuesChanged()
-    }
-
     @IBAction func saveConfigClicked(_ sender: Any) {
         applyConfig()
+    }
+    
+    @IBAction func saveManualTimeClicked(_ sender: Any) {
+        applyManualTime()
     }
     
     // MARK: - SetSpotDetailsDelegate impl
@@ -81,11 +78,9 @@ class ConfigureSpotCheckViewController : UIViewController, UITextFieldDelegate, 
 //    }
 
     private func configValuesChanged() {
-        spotDetailsValid = !(numberOfDaysTextField.text?.isEmpty ?? true)
-        forecastTypesValid = swellForecastSwitch.isOn || tidesForecastSwitch.isOn
         spotNameTextValid = selectedSpotDetails != nil && !selectedSpotDetails!.name.isEmpty && !selectedSpotDetails!.uid.isEmpty
 
-        saveConfigButton.isEnabled = spotNameTextValid && spotDetailsValid && forecastTypesValid
+        saveConfigButton.isEnabled = spotNameTextValid
     }
     
     private func getCurrentConfig() {
@@ -117,10 +112,6 @@ class ConfigureSpotCheckViewController : UIViewController, UITextFieldDelegate, 
                 }
                 
                 DispatchQueue.main.async {
-                    if let numDays = deserialized["number_of_days"] as? String {
-                        self.numberOfDaysTextField.text = numDays
-                    }
-                    
                     let spotName = deserialized["spot_name"] as? String
                     let spotUid = deserialized["spot_uid"] as? String
                     let spotLat = deserialized["spot_lat"] as? String
@@ -132,24 +123,54 @@ class ConfigureSpotCheckViewController : UIViewController, UITextFieldDelegate, 
                         print("Got invalid spot name / uid / lat / lon, setting selected details to nil (name: \(spotName ?? "nil") - uid: \(spotUid ?? "nil") - \(spotLat ?? "nil") - \(spotLon ?? "nil"))")
                         self.setSpotDetails(newSpotDetails: nil)
                     }
-                    if let forecastTypes = deserialized["forecast_types"] as? [String] {
-                        for type in forecastTypes {
-                            switch (type) {
-                            case "swell":
-                                self.swellForecastSwitch.isOn = true
-                                break
-                            case "tides":
-                                self.tidesForecastSwitch.isOn = true
-                                break
-                            default:
-                                print("Got an unsupported forecast type: \(type)")
-                                break
-                            }
-                        }
-                    }
                 }
             } catch {
                 print("Could not deserialize json response when retrieving current config from device, check 'current_configuration' endpoint")
+            }
+        }
+    }
+    
+    private func applyManualTime() {
+        httpRequest?.cancel()
+        // spinner
+        saveConfigButton.isEnabled = false
+
+        let body: [String: Any] = [
+            "epoch_secs" : manualTimeDatePicker.date.timeIntervalSince1970
+        ]
+
+        var data: Data = Data("{}".utf8)
+        do {
+            data = try JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
+        } catch {
+            print(error.localizedDescription)
+            return
+        }
+        
+        httpRequest = SpotCheckNetwork.sendHttpRequest(host: "spot-check.local.", path: "set_time", body: data, method: "POST", contentType: "application/json") { data, error in
+            //hide spinner
+            DispatchQueue.main.async {
+                self.saveConfigButton.isEnabled = true
+            }
+            
+            guard error == nil else {
+                print(error!.localizedDescription)
+
+                let action = UIAlertAction(title: "OK", style: .default, handler: nil)
+                let alertController = UIAlertController(title: "Error", message: "Could not find Spot Check device on network, are you sure it is turned on and connected?", preferredStyle: .alert)
+                alertController.addAction(action)
+                DispatchQueue.main.async {
+                    self.present(alertController, animated: true, completion: nil)
+                }
+
+                return
+            }
+            
+            DispatchQueue.main.async {
+                let action = UIAlertAction(title: "OK", style: .default, handler: nil)
+                let alertController = UIAlertController(title: "Success", message: "Successfully set new time manually on Spot Check device", preferredStyle: .alert)
+                alertController.addAction(action)
+                self.present(alertController, animated: true, completion: nil)
             }
         }
     }
@@ -160,12 +181,11 @@ class ConfigureSpotCheckViewController : UIViewController, UITextFieldDelegate, 
         saveConfigButton.isEnabled = false
 
         let body: [String: Any] = [
-            "number_of_days": numberOfDaysTextField.text!,
             "spot_name": selectedSpotDetails!.name,
             "spot_uid": selectedSpotDetails!.uid,
             "spot_lat": selectedSpotDetails!.lat,
             "spot_lon": selectedSpotDetails!.lon,
-            "forecast_types": buildForecastTypesArray()
+            "epoch_secs" : manualTimeDatePicker.date.timeIntervalSince1970
         ]
 
         var data: Data = Data("{}".utf8)
@@ -203,17 +223,4 @@ class ConfigureSpotCheckViewController : UIViewController, UITextFieldDelegate, 
             }
         }
     }
-    
-    private func buildForecastTypesArray() -> [String] {
-        var forecastTypes: [String] = []
-        if (swellForecastSwitch.isOn) {
-            forecastTypes.append("swell")
-        }
-        if (tidesForecastSwitch.isOn) {
-            forecastTypes.append("tides")
-        }
-        
-        return forecastTypes
-    }
-    
 }
