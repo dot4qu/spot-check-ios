@@ -22,7 +22,7 @@ import Foundation
 class ESPLog {
     
     /// Boolean to determine whether console log needs to be printed
-    static var isLogEnabled = false
+    static var isLogEnabled = true
     
     /// Prints messages in console that are triggered from different functions in a workflow.
     /// Add additional info like timestamp, filename, function name and line before printing the output.

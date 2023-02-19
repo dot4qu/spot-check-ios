@@ -1,8 +1,8 @@
 PODS:
   - Curve25519 (1.1)
-  - ESPProvision (2.0.15):
-    - ESPProvision/Core (= 2.0.15)
-  - ESPProvision/Core (2.0.15):
+  - ESPProvision (2.0.16):
+    - ESPProvision/Core (= 2.0.16)
+  - ESPProvision/Core (2.0.16):
     - Curve25519 (~> 1.1.0)
     - SwiftProtobuf (~> 1.5.0)
   - SwiftProtobuf (1.5.0)
@@ -18,9 +18,9 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   Curve25519: 5f595e906bd962248665978e2992a1fe96e2d831
-  ESPProvision: e5f06a9735279b6cf005dcfa8a7581fa07d6776d
+  ESPProvision: 2e9b4b72d8bb880051882836b17f28f6537a7b77
   SwiftProtobuf: 241400280f912735c1e1b9fe675fdd2c6c4d42e2
 
-PODFILE CHECKSUM: edddf83e9882c718f9e8b1a36b8f5bdf82ea323f
+PODFILE CHECKSUM: 88588d9396ab14b400f129dca43ddba75e5cd458
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.11.3
