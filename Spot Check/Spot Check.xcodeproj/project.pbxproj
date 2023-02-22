@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		E75825D0B369BC8325603AAE /* Pods_Spot_Check.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C2E68A532FDE9AE962061DF /* Pods_Spot_Check.framework */; };
+		F819C48629A2860100C0FCB4 /* timezones.db in Resources */ = {isa = PBXBuildFile; fileRef = F819C48529A2860100C0FCB4 /* timezones.db */; };
+		F819C48829A68F6400C0FCB4 /* TimezoneSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F819C48729A68F6400C0FCB4 /* TimezoneSearchViewController.swift */; };
+		F819C48A29A6922100C0FCB4 /* TimezoneObjTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F819C48929A6922100C0FCB4 /* TimezoneObjTableViewCell.swift */; };
 		F8E37152255059CA00D44E6A /* ConfigureSpotCheckViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8E37151255059CA00D44E6A /* ConfigureSpotCheckViewController.swift */; };
 		F8EB74A42549C2EA00B25E79 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8EB74A32549C2EA00B25E79 /* AppDelegate.swift */; };
 		F8EB74A62549C2EA00B25E79 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8EB74A52549C2EA00B25E79 /* SceneDelegate.swift */; };
@@ -27,6 +30,9 @@
 		0C2E68A532FDE9AE962061DF /* Pods_Spot_Check.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Spot_Check.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B38BA104D98C2FD6B13FFED /* Pods-Spot Check.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Spot Check.debug.xcconfig"; path = "Target Support Files/Pods-Spot Check/Pods-Spot Check.debug.xcconfig"; sourceTree = "<group>"; };
 		C9C683DD754D593053A656CB /* Pods-Spot Check.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Spot Check.release.xcconfig"; path = "Target Support Files/Pods-Spot Check/Pods-Spot Check.release.xcconfig"; sourceTree = "<group>"; };
+		F819C48529A2860100C0FCB4 /* timezones.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = timezones.db; sourceTree = "<group>"; };
+		F819C48729A68F6400C0FCB4 /* TimezoneSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimezoneSearchViewController.swift; sourceTree = "<group>"; };
+		F819C48929A6922100C0FCB4 /* TimezoneObjTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimezoneObjTableViewCell.swift; sourceTree = "<group>"; };
 		F8E37151255059CA00D44E6A /* ConfigureSpotCheckViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigureSpotCheckViewController.swift; sourceTree = "<group>"; };
 		F8EB74A02549C2EA00B25E79 /* Spot Check.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Spot Check.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F8EB74A32549C2EA00B25E79 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -94,6 +100,7 @@
 		F8EB74A22549C2EA00B25E79 /* Spot Check */ = {
 			isa = PBXGroup;
 			children = (
+				F819C48529A2860100C0FCB4 /* timezones.db */,
 				F8EB74A32549C2EA00B25E79 /* AppDelegate.swift */,
 				F8EB74A52549C2EA00B25E79 /* SceneDelegate.swift */,
 				F8EB74A72549C2EA00B25E79 /* ViewController.swift */,
@@ -107,7 +114,9 @@
 				F8E37151255059CA00D44E6A /* ConfigureSpotCheckViewController.swift */,
 				F8F4DC762550857B00CF1ED6 /* SpotCheckNetwork.swift */,
 				F8F4DC822551AD7D00CF1ED6 /* SpotSearchViewController.swift */,
+				F819C48729A68F6400C0FCB4 /* TimezoneSearchViewController.swift */,
 				F8F4DC852551B27800CF1ED6 /* SurflineSpotTableViewCell.swift */,
+				F819C48929A6922100C0FCB4 /* TimezoneObjTableViewCell.swift */,
 			);
 			path = "Spot Check";
 			sourceTree = "<group>";
@@ -173,6 +182,7 @@
 			files = (
 				F8EB74B02549C2EE00B25E79 /* LaunchScreen.storyboard in Resources */,
 				F8EB74AD2549C2EE00B25E79 /* Assets.xcassets in Resources */,
+				F819C48629A2860100C0FCB4 /* timezones.db in Resources */,
 				F8EB74AB2549C2EA00B25E79 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -233,8 +243,10 @@
 				F8E37152255059CA00D44E6A /* ConfigureSpotCheckViewController.swift in Sources */,
 				F8EB74C72549DDCC00B25E79 /* ProvisionDeviceViewController.swift in Sources */,
 				F8EB74A42549C2EA00B25E79 /* AppDelegate.swift in Sources */,
+				F819C48829A68F6400C0FCB4 /* TimezoneSearchViewController.swift in Sources */,
 				F8EB74A62549C2EA00B25E79 /* SceneDelegate.swift in Sources */,
 				F8EB74CA2549EC2F00B25E79 /* VisibleNetworkTableViewCell.swift in Sources */,
+				F819C48A29A6922100C0FCB4 /* TimezoneObjTableViewCell.swift in Sources */,
 				F8F4DC7B255088FF00CF1ED6 /* SpotCheckNetwork.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

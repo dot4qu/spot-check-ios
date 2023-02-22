@@ -9,19 +9,21 @@ import Foundation
 import SystemConfiguration
 import UIKit
 
-class ConfigureSpotCheckViewController : UIViewController, UITextFieldDelegate, SetSpotDetailsDelegate {
-    var spotNameTextValid: Bool = false
-    var spotDetailsValid: Bool = false
+class ConfigureSpotCheckViewController : UIViewController, UITextFieldDelegate, SetSpotDetailsDelegate, SetTimezoneObjDelegate {
     var httpRequest: URLSessionDataTask?
     private var selectedSpotDetails: SpotDetails? = nil
+    private var selectedTimezoneObj: TimezoneObj? = nil
     private var manualTimeEpochSecs: UInt32 = 0
+//    private var timezonesPlist: NSDictionary?
 
     // MARK: - Overrides
     
     override func viewDidLoad() {
         super.viewDidLoad()
         manualTimeDatePicker.timeZone = TimeZone.init(identifier: "UTC")
-
+        
+        
+        
         configValuesChanged()
         getCurrentConfig()
     }
@@ -33,6 +35,7 @@ class ConfigureSpotCheckViewController : UIViewController, UITextFieldDelegate, 
     // MARK: - IBOutlets
 
     @IBOutlet weak var selectedSpotNameLabel: UILabel!
+    @IBOutlet weak var selectedTimezoneLabel: UILabel!
     @IBOutlet weak var saveConfigButton: UIButton!
     @IBOutlet weak var saveManualTimeButton: UIButton!
     @IBOutlet weak var manualTimeDatePicker: UIDatePicker!
@@ -45,6 +48,16 @@ class ConfigureSpotCheckViewController : UIViewController, UITextFieldDelegate, 
             vc.initialSearchText = selectedSpotDetails!.name
         }
 
+        vc.delegate = self
+        navigationController?.present(vc, animated: true, completion: nil)
+    }
+    
+    @IBAction func editTimezoneButtonClicked(_ sender: Any) {
+        let vc = storyboard?.instantiateViewController(withIdentifier: "timezoneSearchVC") as! TimezoneSearchViewController
+        if (selectedTimezoneObj != nil) {
+            vc.initialSearchText = selectedTimezoneObj?.displayName
+        }
+        
         vc.delegate = self
         navigationController?.present(vc, animated: true, completion: nil)
     }
@@ -70,6 +83,15 @@ class ConfigureSpotCheckViewController : UIViewController, UITextFieldDelegate, 
         configValuesChanged()
     }
     
+    // MARK: - SetTimezoneObjDelegate impl
+    
+    func setTimezoneObj(newTimezoneObj: TimezoneObj?) {
+        selectedTimezoneObj = newTimezoneObj
+        selectedTimezoneLabel.text = newTimezoneObj?.displayName ?? "No timzeone selected"
+        selectedTimezoneLabel.textColor = selectedTimezoneObj == nil ? UIColor.opaqueSeparator : UIColor.label
+        configValuesChanged()
+    }
+    
     // MARK: - ViewController functions
     
 //    func textFieldShouldReturn(_ userText: UITextField) -> Bool {
@@ -78,9 +100,10 @@ class ConfigureSpotCheckViewController : UIViewController, UITextFieldDelegate, 
 //    }
 
     private func configValuesChanged() {
-        spotNameTextValid = selectedSpotDetails != nil && !selectedSpotDetails!.name.isEmpty && !selectedSpotDetails!.uid.isEmpty
+        let spotNameTextValid = selectedSpotDetails != nil && !selectedSpotDetails!.name.isEmpty && !selectedSpotDetails!.uid.isEmpty
+        let timezoneValid = selectedTimezoneObj != nil && !selectedTimezoneObj!.displayName.isEmpty && !selectedTimezoneObj!.tzStr.isEmpty
 
-        saveConfigButton.isEnabled = spotNameTextValid
+        saveConfigButton.isEnabled = spotNameTextValid && timezoneValid
     }
     
     private func getCurrentConfig() {
@@ -185,7 +208,7 @@ class ConfigureSpotCheckViewController : UIViewController, UITextFieldDelegate, 
             "spot_uid": selectedSpotDetails!.uid,
             "spot_lat": selectedSpotDetails!.lat,
             "spot_lon": selectedSpotDetails!.lon,
-            "epoch_secs" : manualTimeDatePicker.date.timeIntervalSince1970
+            "tz_str": selectedTimezoneObj!.tzStr
         ]
 
         var data: Data = Data("{}".utf8)
