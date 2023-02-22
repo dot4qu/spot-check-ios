@@ -7,5 +7,7 @@ target 'Spot Check' do
 
   # Pods for Espressif Protocomm Test
   pod 'ESPProvision'
+  
+  pod 'SQLite.swift', '~> 0.14.1'
 
 end
