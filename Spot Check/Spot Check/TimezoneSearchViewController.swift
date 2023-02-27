@@ -13,36 +13,18 @@ class TimezoneSearchViewController : UITableViewController, UISearchResultsUpdat
     var initialSearchText: String? = nil
     var searchController: UISearchController!
     var filteredTimezoneObjs: [TimezoneObj] = []
-    var db: Connection? = nil
-    var tzTable: Table? = nil
+    
+    var db: Connection!
+    var tzTable: Table!
     var displayNameCol = Expression<String>("display_name")
     var tzStrCol = Expression<String>("tz_string")
-    
-    
+
     weak var delegate: SetTimezoneObjDelegate?
     
     // MARK: - IBOutlets
     
     // MARK: - Overrides
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        
-        do {
-            let dbUrl = Bundle.main.url(forResource: "timezones", withExtension: "db")
-            let dbPath = dbUrl!.absoluteString
-            db = try Connection(dbPath)
-            
-            tzTable = Table("timezones")
-            displayNameCol = Expression<String>("display_name")
-            tzStrCol = Expression<String>("tz_string")
 
-        } catch {
-            print(error)
-            exit(1)
-        }
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         

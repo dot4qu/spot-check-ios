@@ -8,21 +8,41 @@
 import Foundation
 import SystemConfiguration
 import UIKit
+import SQLite
 
 class ConfigureSpotCheckViewController : UIViewController, UITextFieldDelegate, SetSpotDetailsDelegate, SetTimezoneObjDelegate {
     var httpRequest: URLSessionDataTask?
     private var selectedSpotDetails: SpotDetails? = nil
     private var selectedTimezoneObj: TimezoneObj? = nil
     private var manualTimeEpochSecs: UInt32 = 0
-//    private var timezonesPlist: NSDictionary?
+    var db: Connection? = nil
+    var tzTable: Table? = nil
+    var displayNameCol = Expression<String>("display_name")
+    var tzStrCol = Expression<String>("tz_string")
 
     // MARK: - Overrides
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        
+        do {
+            let dbUrl = Bundle.main.url(forResource: "timezones", withExtension: "db")
+            let dbPath = dbUrl!.absoluteString
+            db = try Connection(dbPath)
+            
+            tzTable = Table("timezones")
+            displayNameCol = Expression<String>("display_name")
+            tzStrCol = Expression<String>("tz_string")
+
+        } catch {
+            print(error)
+            exit(1)
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         manualTimeDatePicker.timeZone = TimeZone.init(identifier: "UTC")
-        
-        
         
         configValuesChanged()
         getCurrentConfig()
@@ -54,6 +74,12 @@ class ConfigureSpotCheckViewController : UIViewController, UITextFieldDelegate, 
     
     @IBAction func editTimezoneButtonClicked(_ sender: Any) {
         let vc = storyboard?.instantiateViewController(withIdentifier: "timezoneSearchVC") as! TimezoneSearchViewController
+        
+        vc.db = db
+        vc.tzTable = tzTable
+        vc.displayNameCol = displayNameCol
+        vc.tzStrCol = tzStrCol
+        
         if (selectedTimezoneObj != nil) {
             vc.initialSearchText = selectedTimezoneObj?.displayName
         }
@@ -87,7 +113,7 @@ class ConfigureSpotCheckViewController : UIViewController, UITextFieldDelegate, 
     
     func setTimezoneObj(newTimezoneObj: TimezoneObj?) {
         selectedTimezoneObj = newTimezoneObj
-        selectedTimezoneLabel.text = newTimezoneObj?.displayName ?? "No timzeone selected"
+        selectedTimezoneLabel.text = newTimezoneObj?.displayName ?? "No timezone selected"
         selectedTimezoneLabel.textColor = selectedTimezoneObj == nil ? UIColor.opaqueSeparator : UIColor.label
         configValuesChanged()
     }
@@ -139,12 +165,37 @@ class ConfigureSpotCheckViewController : UIViewController, UITextFieldDelegate, 
                     let spotUid = deserialized["spot_uid"] as? String
                     let spotLat = deserialized["spot_lat"] as? String
                     let spotLon = deserialized["spot_lon"] as? String
+                    let tzStr = deserialized["tz_str"] as? String
+                    let tzDisplayName = deserialized["tz_display_name"] as? String
                     if (spotName != nil && spotUid != nil && spotLat != nil && spotLon != nil) {
                         let details = SpotDetails(name: spotName!, uid: spotUid!, lat: spotLat!, lon: spotLon!)
                         self.setSpotDetails(newSpotDetails: details)
                     } else {
                         print("Got invalid spot name / uid / lat / lon, setting selected details to nil (name: \(spotName ?? "nil") - uid: \(spotUid ?? "nil") - \(spotLat ?? "nil") - \(spotLon ?? "nil"))")
                         self.setSpotDetails(newSpotDetails: nil)
+                    }
+
+                    if (tzStr != nil && tzDisplayName != nil) {
+                        let query = self.tzTable!.filter(self.displayNameCol.like(tzDisplayName!))
+                        do {
+                            if let rawObj = try self.db!.pluck(query) {
+                                let obj = TimezoneObj(displayName: rawObj[self.displayNameCol], tzStr: rawObj[self.tzStrCol])
+                                
+                                // This assert technically isn't necessary, and we could also fall back to selecting based off received tz_str if display_name fails, but theoretically that should never happen
+                                assert(obj.tzStr == tzStr)
+                                
+                                self.setTimezoneObj(newTimezoneObj: obj)
+                            } else {
+                                print("Got tz_str but query out of db failed, setting selected obj to nil (tz_str: \(tzStr ?? "nil"))")
+                                self.setTimezoneObj(newTimezoneObj: nil)
+                            }
+                        } catch {
+                            print(error)
+                            exit(1)
+                        }
+                    } else {
+                        print("Got invalid tz_str / tz_display_name, setting selected obj to nil (tz_str: \(tzStr ?? "nil") - tz_display_name: \(tzDisplayName ?? "nil")")
+                        self.setTimezoneObj(newTimezoneObj: nil)
                     }
                 }
             } catch {
@@ -208,7 +259,8 @@ class ConfigureSpotCheckViewController : UIViewController, UITextFieldDelegate, 
             "spot_uid": selectedSpotDetails!.uid,
             "spot_lat": selectedSpotDetails!.lat,
             "spot_lon": selectedSpotDetails!.lon,
-            "tz_str": selectedTimezoneObj!.tzStr
+            "tz_str": selectedTimezoneObj!.tzStr,
+            "tz_display_name": selectedTimezoneObj!.displayName
         ]
 
         var data: Data = Data("{}".utf8)
