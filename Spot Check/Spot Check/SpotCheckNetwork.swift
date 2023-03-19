@@ -24,9 +24,9 @@ public class SpotCheckNetwork {
                 return
             }
 
-            let httpStatus = response as? HTTPURLResponse
-            if httpStatus?.statusCode != 200 {
-                print("statusCode should be 200, but is \(String(describing: httpStatus?.statusCode))")
+            let httpResponse = response as? HTTPURLResponse
+            if httpResponse?.statusCode != 200 {
+                print("statusCode should be 200, but is \(String(describing: httpResponse?.statusCode))")
             }
 
             completionHandler(data, nil)
