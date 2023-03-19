@@ -44,6 +44,8 @@ class ConfigureSpotCheckViewController : UIViewController, UITextFieldDelegate, 
         super.viewDidLoad()
         manualTimeDatePicker.timeZone = TimeZone.init(identifier: "UTC")
         
+        
+        
         configValuesChanged()
         getCurrentConfig()
     }
